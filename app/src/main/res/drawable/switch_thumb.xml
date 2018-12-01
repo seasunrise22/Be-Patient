@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- thumb는 현재 하나만 사용중이라 이거 말고 switch_thumb_selector.xml 를 수정해야 적용 됨 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+
+    <size
+        android:width="25dp"
+        android:height="25dp" />
+
+    <solid android:color="@android:color/white" />
+
+</shape>
