@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
                 if(isChecked) { // 스위치 on
                     bindService(serviceIntent, conn, Context.BIND_AUTO_CREATE); // 서비스바인드 시작
                     startService(serviceIntent); // 화면켜짐카운트 누적시키는 서비스 시작
-                    saveSwitchState(isChecked); // 스위치 상태를 'pref_MainActivity' 파일에 저장
+                    saveSwitchState(isChecked); // 스위치 상태를 'pref_saveData' 파일에 저장
                 } else { // 스위치 off
                     stopService(serviceIntent);
                     if(isBinding) { // 현재 바인드서비스가 돌고 있다면
@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
                         //saveBindServiceState(false); // 서비스바인딩 상태 저장
                         isBinding = false;
                     }
-                    saveSwitchState(isChecked); // 스위치 상태와 서비스바인딩여부 'pref_MainActivity' 파일에 저장
+                    saveSwitchState(isChecked); // 스위치 상태와 서비스바인딩여부 'pref_saveData' 파일에 저장
                 }
             }
         });
@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
 
     // 현재 스위치 상태를 'pref_MainActivity' 파일에 저장시키는 함수
     private void saveSwitchState(Boolean sw) {
-        SharedPreferences pref = getSharedPreferences("pref_MainActivity", Activity.MODE_PRIVATE); // 스위치 상태를 저장해둔 pref 파일 가져오기
+        SharedPreferences pref = getSharedPreferences("pref_saveData", Activity.MODE_PRIVATE); // 스위치 상태를 저장해둔 pref 파일 가져오기
         SharedPreferences.Editor editor = pref.edit(); // SharedPreferences 상태를 수정하기 위한 Editor 생성
         editor.putBoolean("switchState", sw); // switchState 변수에 스위치 상태값 저장
         editor.apply();
@@ -194,13 +194,7 @@ public class MainActivity extends AppCompatActivity {
 
     // 스위치의 현재 상태를 불러오기 위한 함수
     public boolean loadSwitchState() {
-        SharedPreferences pref = getSharedPreferences("pref_MainActivity", Activity.MODE_PRIVATE); // 스위치 상태를 저장해둔 pref 파일 가져오기
+        SharedPreferences pref = getSharedPreferences("pref_saveData", Activity.MODE_PRIVATE); // 스위치 상태를 저장해둔 pref 파일 가져오기
         return pref.getBoolean("switchState", false); // switchState 변수의 값을 return. 초기값은 false.
-    }
-
-    // 서비스바인딩 현재 상태를 불러오기 위한 함수
-    public boolean loadBindServiceState() {
-        SharedPreferences pref = getSharedPreferences("pref_MainActivity", Activity.MODE_PRIVATE); // 스위치 상태를 저장해둔 pref 파일 가져오기
-        return pref.getBoolean("serviceBindState", false); // serviceBindState 변수의 값을 return. 초기값은 false.
     }
 }

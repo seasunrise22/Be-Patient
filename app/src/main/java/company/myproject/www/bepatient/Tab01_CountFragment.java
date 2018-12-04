@@ -23,8 +23,6 @@ import java.util.TimerTask;
 public class Tab01_CountFragment extends android.support.v4.app.Fragment {
 
     public static final String TAG = "Tab01_CountFragment";
-//    int currentCount;
-//    int afterCount;
     TextView mTextView;
     Handler mHanlder;
 
@@ -35,12 +33,6 @@ public class Tab01_CountFragment extends android.support.v4.app.Fragment {
         View view = inflater.inflate(R.layout.fragment_tab01, container, false);
 
         mTextView = view.findViewById(R.id.screenOnCount); // 텍스트뷰 접근
-//        if(((MainActivity)getActivity()) != null) {
-//            if (((MainActivity) getActivity()).isBinding != null && ((MainActivity) getActivity()).isBinding) {
-//                currentCount = ((MainActivity) getActivity()).countService.getScreenOnCount();
-//                mTextView.setText("" + currentCount);
-//            }
-//        }
 
         // 그냥 TimerTask로 기능을 돌리면 스레드관련 에러떠서 Handler 이용해서 구현
         mHanlder = new Handler();
@@ -50,8 +42,8 @@ public class Tab01_CountFragment extends android.support.v4.app.Fragment {
                 mHanlder.post(new Runnable() {
                     @Override
                     public void run() {
-                        if(((MainActivity)getActivity()) != null) {
-                            if (((MainActivity) getActivity()).isBinding != null && ((MainActivity) getActivity()).isBinding) {
+                        if(((MainActivity)getActivity()) != null) { // 메인액티비티와 순간 떨어졌을 때 getActivity 쓰면 가끔 에러남
+                            if (((MainActivity) getActivity()).isBinding != null && ((MainActivity) getActivity()).isBinding) { // 서비스바인딩상태라면
                                 mTextView.setText("" + ((MainActivity) getActivity()).countService.getScreenOnCount());
                             }
                         }
@@ -62,38 +54,6 @@ public class Tab01_CountFragment extends android.support.v4.app.Fragment {
 
         Timer mTimer = new Timer();
         mTimer.schedule(mTimerTask, 0, 1000);
-
-
-
-        // 텍스트 변경
-        //Log.d(TAG, "isBinding is : " + ((MainActivity)getActivity()).isBinding);
-//        if (((MainActivity) getActivity()) != null) { // 프래그먼트 뗏다 붙였다 할 때 간혹 null 되기도 하는 듯
-//            if (((MainActivity) getActivity()).isBinding != null && ((MainActivity) getActivity()).isBinding) { // 서비스바인딩 상태가 null이 아니고 true면(바인딩중)
-//                mTextView.setText("" + ((MainActivity) getActivity()).countService.getScreenOnCount());
-//            } else { // 서비스바인딩 상태가 null이거나 false면(바인딩아님)
-//                mTextView.setTextSize(32);
-//                mTextView.setText("No signal");
-//            }
-//        }
-
-//        FragmentTransaction ft = ((MainActivity) getActivity()).getSupportFragmentManager().beginTransaction();
-//        ft.detach(Tab01_CountFragment.this);
-//        ft.attach(Tab01_CountFragment.this);
-//        ft.commitAllowingStateLoss();
-
-//        // 텍스트 갱신을 위한 프래그먼트 새로고침(뗏다 붙였다)
-//        Handler mHandler = new Handler();
-//        mHandler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                if(((MainActivity)getActivity()).getSupportFragmentManager() != null) {
-//                    FragmentTransaction ft = ((MainActivity)getActivity()).getSupportFragmentManager().beginTransaction();
-//                    ft.detach(Tab01_CountFragment.this);
-//                    ft.attach(Tab01_CountFragment.this);
-//                    ft.commitAllowingStateLoss();
-//                }
-//            }
-//        }, 1000); // 1초에 한 번씩 계속 화면을 뗏다 붙였다... 실시간 갱신 처럼 보이게
 
         return view;
     }

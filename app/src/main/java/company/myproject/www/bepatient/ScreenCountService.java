@@ -1,5 +1,6 @@
 package company.myproject.www.bepatient;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -7,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -21,7 +23,6 @@ public class ScreenCountService extends Service {
 
     private BroadcastReceiver mReceiver;
     private IntentFilter mIntentFilter;
-    private int screenOnCount = 0; // 화면켜짐횟수 누적시킬 변수
 
     /**
      * 서비스바인딩을 위한 Binder 구현
@@ -54,13 +55,25 @@ public class ScreenCountService extends Service {
         startForeground(1, setNotification()); // TaskKiller에 서비스가 죽지 않도록 하기 위하여
         // + 노티피케이션 실행
 
-        // 화면켜짐액션 받을 리시버 등록
+
+
+
+        // 화면켜짐액션 받을 리시버 객체 생성과 정의
         mReceiver = new BroadcastReceiver() {
+
+            // 화면켜짐 카운트 횟수 누적과 저장을 위한 SharedPreferences 사전작업
+            SharedPreferences pref = getSharedPreferences("pref_saveData", Activity.MODE_PRIVATE); // 카운트 횟수를 누적시켜둔 변수에 접근하기 위한 sharedPreferences 연결 통로 생성
+            SharedPreferences.Editor editor = pref.edit(); // SharedPreferences 수정을 위한 에디터 호출.
+            int screenOnCount = pref.getInt("dailyCount", 0); // 저장된 당일 카운트 횟수 변수를 불러온다. 초기값은 0.
+
+            // 리시버 필터를 통한 행동감지 및 행동구현
             @Override
-            public void onReceive(Context context, Intent intent) {
-                if(intent.getAction().equals(Intent.ACTION_USER_PRESENT)) {
-                    screenOnCount++; // 화면켜짐 카운트
-                    Log.d(TAG, "testCount is # " + screenOnCount);
+            public void onReceive(Context context, Intent intent) { // 리시버 반응
+                if(intent.getAction().equals(Intent.ACTION_USER_PRESENT)) { // 화면이 켜졌을 때의 상황
+                    screenOnCount++; // 저장된 횟수에 1을 더하여 누적시킴
+                    editor.putInt("dailyCount", screenOnCount); // 'pref_saveData' 파일의 'dailyCount' 변수에 누적된 'screenOnCount' 변수를 저장.
+                    editor.apply();
+                    //Log.d(TAG, "testCount is # " + screenOnCount);
                 }
             }
         };
@@ -113,9 +126,10 @@ public class ScreenCountService extends Service {
 
     /**
      * method for clients
-     * 화면켜짐횟수를 누적한 변수를 반환하는 함수
+     * 화면켜짐횟수를 누적한 변수를 반환하는 함수(SharedPreferences로 부터)
      **/
     public int getScreenOnCount() {
-        return screenOnCount;
+        SharedPreferences pref = getSharedPreferences("pref_saveData", Activity.MODE_PRIVATE);
+        return pref.getInt("dailyCount", 0);
     }
 }
