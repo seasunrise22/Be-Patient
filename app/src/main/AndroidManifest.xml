@@ -23,6 +23,13 @@
         <!-- Service -->
         <service android:name=".ScreenCountService" />
 
+        <!-- Receiver -->
+        <receiver android:name=".AlarmReceiver">
+            <intent-filter>
+                <action android:name="company.myproject.www.bepatient.ALARM_START"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

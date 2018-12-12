@@ -16,6 +16,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    lintOptions { // App is not indexable by Google Search ... 에러 해결하기 위해 Deep Link Check를 Disable 하려고 추가
+        disable 'GoogleAppIndexingWarning'
+        baseline file("lint-baseline.xml") // your choice of filename/path here
+    }
 }
 
 dependencies {

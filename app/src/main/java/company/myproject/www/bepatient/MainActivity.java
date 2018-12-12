@@ -1,6 +1,9 @@
 package company.myproject.www.bepatient;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +12,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.provider.CalendarContract;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
@@ -20,7 +24,12 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -30,6 +39,12 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private SectionsPageAdapter adapter; // 프래그먼트를 전환시킬 어댑터
     private Intent serviceIntent;
+
+    // 현재시각 표시용 멤버변수들
+    long mNow;
+    Date mDate;
+    SimpleDateFormat mSdf;
+    String mGetDate;
 
     /**
      * ServiceBinding 관련 시작
@@ -79,26 +94,26 @@ public class MainActivity extends AppCompatActivity {
         // 서비스 시작용 인텐트
         serviceIntent = new Intent(getApplicationContext(), ScreenCountService.class);
 
-//        // 실시간으로 화면이 새로고침 되는 것 처럼 보이기 위해 프래그먼트를 삭제했다 추가했다 반복
-//        TimerTask mTimerTask = new TimerTask() {
-//            @Override
-//            public void run() {
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        adapter.clearItem();
-//                        adapter.addFragment(new Tab01_CountFragment(), "카운트");
-//                        adapter.addFragment(new Tab02_EmptyFragment(), "빈탭02");
-//                        adapter.addFragment(new Tab03_EmptyFragment(), "빈탭03");
-//                        adapter.addFragment(new Tab04_EmptyFragment(), "빈탭04");
-//                        adapter.notifyDataSetChanged();
-//                    }
-//                });
-//            }
-//        };
-//
-//        Timer mTimer = new Timer();
-//        mTimer.schedule(mTimerTask, 0, 1000);
+        /**
+         * set 된 시간(자정)에 그 날 하루동안의 화면켜짐횟수(dailyData)를 통계저장용 파일로 넘겨서 저장시킴
+         */
+        // Calendar 객체를 생성해 시간을 set
+        Calendar mCalendar = Calendar.getInstance();
+        mCalendar.set(Calendar.HOUR_OF_DAY, 24); // 자정
+        mCalendar.set(Calendar.MINUTE, 0);
+        mCalendar.set(Calendar.SECOND, 0);
+
+        // AlarmManager에게 실행을 부탁할 PendingIntent 구현
+        Intent mAlarmIntent = new Intent("company.myproject.www.bepatient.ALARM_START"); // manifest.xml에 지정해 둔 intent-filter 활용
+        PendingIntent mPendingIntent = PendingIntent.getBroadcast(this, 0, mAlarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // AlarmManager를 얻어와서 세팅
+        AlarmManager mAlarmManager = (AlarmManager)getSystemService(ALARM_SERVICE); // 알람매니저 하나 가져옴
+        mAlarmManager.set(
+                AlarmManager.RTC_WAKEUP,
+                mCalendar.getTimeInMillis(),
+                mPendingIntent
+        );
     }
 
     @Override
@@ -109,6 +124,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        // 현재시각 표시용 현재시각 받아오기 작업
+        mNow = System.currentTimeMillis(); // 현재시각을 구한다.
+        mDate = new Date(mNow); // Date를 하나 생성하고 거기에 현재시각을 넣는다.
+        mSdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()); // 표기방식을 설정한다.
+        mGetDate = mSdf.format(mDate); // 날짜를 String 형태로 받아와서 저장한다.
     }
 
     // onStop은 스마트폰 화면만 꺼도 호출 됨.(액티비티가 전면에 없으면 무조건 호출)

@@ -23,7 +23,8 @@ import java.util.TimerTask;
 public class Tab01_CountFragment extends android.support.v4.app.Fragment {
 
     public static final String TAG = "Tab01_CountFragment";
-    TextView mTextView;
+    TextView mCountText;
+    TextView mDateText;
     Handler mHanlder;
 
     @Nullable
@@ -32,19 +33,22 @@ public class Tab01_CountFragment extends android.support.v4.app.Fragment {
         //Log.d(TAG, "Tab01_CountFragment : onCreateView");
         View view = inflater.inflate(R.layout.fragment_tab01, container, false);
 
-        mTextView = view.findViewById(R.id.screenOnCount); // 텍스트뷰 접근
+        mCountText = view.findViewById(R.id.screenOnCount); // 카운트 보여줄 텍스트뷰 접근
+        mDateText = view.findViewById(R.id.dateView); // 오늘 날짜 보여줄 텍스트뷰 접근
+
+        mDateText.setText(((MainActivity) getActivity()).mGetDate);
 
         // 그냥 TimerTask로 기능을 돌리면 스레드관련 에러떠서 Handler 이용해서 구현
         mHanlder = new Handler();
         TimerTask mTimerTask = new TimerTask() {
             @Override
             public void run() {
-                mHanlder.post(new Runnable() {
+                mHanlder.post(new Runnable() { // UI변경은 메인쓰레드에서만 가능하므로 Handler의 post로 메인스레드의 메시지큐에 던짐
                     @Override
                     public void run() {
                         if(((MainActivity)getActivity()) != null) { // 메인액티비티와 순간 떨어졌을 때 getActivity 쓰면 가끔 에러남
                             if (((MainActivity) getActivity()).isBinding != null && ((MainActivity) getActivity()).isBinding) { // 서비스바인딩상태라면
-                                mTextView.setText("" + ((MainActivity) getActivity()).countService.getScreenOnCount());
+                                mCountText.setText("" + ((MainActivity) getActivity()).countService.getScreenOnCount());
                             }
                         }
                     }

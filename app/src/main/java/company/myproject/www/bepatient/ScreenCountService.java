@@ -15,6 +15,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import static android.app.PendingIntent.FLAG_CANCEL_CURRENT;
 
 public class ScreenCountService extends Service {
@@ -23,6 +27,10 @@ public class ScreenCountService extends Service {
 
     private BroadcastReceiver mReceiver;
     private IntentFilter mIntentFilter;
+    long mNow;
+    Date mDate;
+    SimpleDateFormat mSdf;
+    String mGetDate;
 
     /**
      * 서비스바인딩을 위한 Binder 구현
@@ -55,9 +63,6 @@ public class ScreenCountService extends Service {
         startForeground(1, setNotification()); // TaskKiller에 서비스가 죽지 않도록 하기 위하여
         // + 노티피케이션 실행
 
-
-
-
         // 화면켜짐액션 받을 리시버 객체 생성과 정의
         mReceiver = new BroadcastReceiver() {
 
@@ -79,6 +84,22 @@ public class ScreenCountService extends Service {
         };
         mIntentFilter = new IntentFilter(Intent.ACTION_USER_PRESENT); // 화면 켜짐(잠금화면 풀린 상태) 액션 필터 등록
         registerReceiver(mReceiver, mIntentFilter); // 브로드캐스트 리시버 등록
+
+        /**
+         * statData 파일로 dailyData(일별 카운트) 변수값과 날짜 넘겨서 통계자료 만들기
+         * 알고리즘:
+         *  1) 스위치를 켠다. (지금 이 서비스의 onStartCommand 실행 됨)
+         *  2) 당일 날짜를 받아서 변수에 넣는다. 이전 날짜는 또 다른 날짜에 저장되어 있는 상태. 변수 두개는 배열로 관리.
+         *  3) 분기
+         *   3-1) 이전 날짜와 당일 날짜를 비교하여 같으면 날짜가 지나지 않은 것이므로 동작 없음. 계속 카운트.
+         *   3-2) 이전 날짜와 당일 날짜를 비교하여 다르면 날짜가 지난 것이므로 이전 날짜와 남아있는 dailyData 변수값을 함께 통계자료로 넘김.
+         *        이전 날짜가 담겨져 있던 배열 공간은 비우고, 당일 날짜가 있던 공간만이 아 만들면서 생각해보자.
+         */
+        mNow = System.currentTimeMillis(); // 현재시각을 구한다.
+        mDate = new Date(mNow); // Date를 하나 생성하고 거기에 현재시각을 넣는다.
+        mSdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()); // 표기방식을 설정한다.
+        mGetDate = mSdf.format(mDate); // 날짜를 String 형태로 받아와서 저장한다.
+        //Log.d(TAG, "mGetDate is # " + mGetDate);
 
         return super.onStartCommand(intent, flags, startId);
     }
@@ -127,6 +148,7 @@ public class ScreenCountService extends Service {
     /**
      * method for clients
      * 화면켜짐횟수를 누적한 변수를 반환하는 함수(SharedPreferences로 부터)
+     * Tab01_CountFragment.java 에서 사용
      **/
     public int getScreenOnCount() {
         SharedPreferences pref = getSharedPreferences("pref_saveData", Activity.MODE_PRIVATE);
