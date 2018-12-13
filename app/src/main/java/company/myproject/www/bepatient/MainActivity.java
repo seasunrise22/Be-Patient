@@ -96,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
         /**
          * set 된 시간(자정)에 그 날 하루동안의 화면켜짐횟수(dailyData)를 통계저장용 파일로 넘겨서 저장시킴
+         * 이거 안 쓰게 될수도 있음.
          */
         // Calendar 객체를 생성해 시간을 set
         Calendar mCalendar = Calendar.getInstance();

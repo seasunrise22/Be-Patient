@@ -27,10 +27,16 @@ public class ScreenCountService extends Service {
 
     private BroadcastReceiver mReceiver;
     private IntentFilter mIntentFilter;
+
+    // 카운트 변수값 통계자료로 넘기기 위한 준비
+    // 현재시각 구하기 위한 변수들
     long mNow;
     Date mDate;
     SimpleDateFormat mSdf;
     String mGetDate;
+    // 통계자료 저장용
+    SharedPreferences sPref;
+    SharedPreferences.Editor sPrefEditor;
 
     /**
      * 서비스바인딩을 위한 Binder 구현
@@ -95,11 +101,20 @@ public class ScreenCountService extends Service {
          *   3-2) 이전 날짜와 당일 날짜를 비교하여 다르면 날짜가 지난 것이므로 이전 날짜와 남아있는 dailyData 변수값을 함께 통계자료로 넘김.
          *        이전 날짜가 담겨져 있던 배열 공간은 비우고, 당일 날짜가 있던 공간만이 아 만들면서 생각해보자.
          */
+        // 현재시각 구하기
         mNow = System.currentTimeMillis(); // 현재시각을 구한다.
         mDate = new Date(mNow); // Date를 하나 생성하고 거기에 현재시각을 넣는다.
         mSdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()); // 표기방식을 설정한다.
         mGetDate = mSdf.format(mDate); // 날짜를 String 형태로 받아와서 저장한다.
         //Log.d(TAG, "mGetDate is # " + mGetDate);
+
+        // 통계자료 넘기기
+        sPref = getSharedPreferences("pref_statData", Activity.MODE_PRIVATE); // 통계자료 저장을 위한 pref 파일 받아옴.
+        if(sPref.getString(mGetDate, "no data").equals("no data")) { // 오늘 날짜로 된 데이터(변수)가 생성되어 있지 않다면
+            sPrefEditor = sPref.edit(); // 데이터 수정을 위한 에디터 연결.
+            sPrefEditor.putString(mGetDate, "checking now..."); // 오늘 날짜로 변수 생성함
+            sPrefEditor.apply();
+        }
 
         return super.onStartCommand(intent, flags, startId);
     }
