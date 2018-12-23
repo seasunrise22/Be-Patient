@@ -3,18 +3,14 @@ package company.myproject.www.bepatient;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
-import android.provider.CalendarContract;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -24,14 +20,11 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,11 +33,19 @@ public class MainActivity extends AppCompatActivity {
     private SectionsPageAdapter adapter; // 프래그먼트를 전환시킬 어댑터
     private Intent serviceIntent;
 
-    // 현재시각 표시용 멤버변수들
+    // 현재시각 받아오기용 멤버변수들
     long mNow;
     Date mDate;
     SimpleDateFormat mSdf;
     String mGetDate;
+
+    // 카운트 변수값 통계자료로 넘기기 위한 준비
+    // 통계자료 저장용 SharedPreferences
+    SharedPreferences statPref;
+    SharedPreferences.Editor statPrefEditor;
+    // 날짜가 바뀌었음을 감지하고 바뀐 날짜에 데이터를 넘기기 위한 이전날짜, 현재날짜 세팅
+    Date beforeDate; // 이전날짜
+    Date currentDate; // 현재날짜
 
     /**
      * ServiceBinding 관련 시작
@@ -131,6 +132,39 @@ public class MainActivity extends AppCompatActivity {
         mDate = new Date(mNow); // Date를 하나 생성하고 거기에 현재시각을 넣는다.
         mSdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()); // 표기방식을 설정한다.
         mGetDate = mSdf.format(mDate); // 날짜를 String 형태로 받아와서 저장한다.
+
+        if(beforeDate == null) { // 최초실행일시
+            beforeDate = mDate;
+            currentDate = mDate;
+        } else { // 최초실행이 아닐시
+            currentDate = mDate;
+            if(currentDate.after(beforeDate)) { // 현재날짜가 저장되어있는 이전날짜보다 이후라면(날짜가 바뀜)
+                String searchDate = mSdf.format(beforeDate);
+//                statPrefEditor.putString(searchDate, adapter.getItem(0).mCount)
+                // 요런식으로 비교해서 데이터 집어넣으면 될 듯.
+                // 근데 Main에 말고 걍 Tab01 프래그먼트 Resume 안에다가 구현하자.
+                // 서비스로부터 받아 온 count 변수를 0으로 초기화...
+                // 아, 액티비티에서 서비스 함수로 어떻게 접근하지? 서비스 함수에 있는 count 변수를 0으로 초기화 해야 하는데.
+                // 카운트 변수를 지금처럼 서비스에 둬서 서비스에 접근한 후 데이터를 조작하거나.
+                // 아니면... 그냥 Main에 count 변수를 static으로 둬서 전역으로 접근해버릴까?
+            }
+        }
+
+        // 앱화면 활성화 될 때 마다 통계자료 데이터 확인하고 넘기기
+        // 서비스에 구현하려니 스위치안끄면 어떻게 새 날짜를 받아서 데이터를 넘겨야할지 애매함. 서비스에 타이머 걸어두는것도 좀 그렇고.
+        statPref = getSharedPreferences("pref_statData", Activity.MODE_PRIVATE); // 통계자료 저장을 위한 pref 파일 받아옴.
+        if(statPref.getString(mGetDate, "no data").equals("no data")) { // 오늘 날짜로 된 데이터(변수)가 생성되어 있지 않다면
+            statPrefEditor = statPref.edit(); // 데이터 수정을 위한 에디터 연결.
+            statPrefEditor.putString(mGetDate, "checking now..."); // 오늘 날짜로 변수 생성하고 변수값으로 checking now... 입력.
+            statPrefEditor.apply();
+        }
+
+//        Log.d(TAG, "mNow is # " + mNow);
+//        Log.d(TAG, "mDate is # " + mDate);
+//        Log.d(TAG, "mSdf is # " + mSdf);
+//        Log.d(TAG, "mGetDate is # " + mGetDate);
+//        Log.d(TAG, "beforeDate is # " + beforeDate);
+//        Log.d(TAG, "currentDate is # " + currentDate);
     }
 
     // onStop은 스마트폰 화면만 꺼도 호출 됨.(액티비티가 전면에 없으면 무조건 호출)
@@ -200,7 +234,7 @@ public class MainActivity extends AppCompatActivity {
     // 탭 뷰페이저 : 받은 뷰페이저 객체에 프레그먼트와 타이틀 정보가 담긴 어댑터 객체를 세트
     private void setupViewPager(ViewPager viewPager) {
         adapter.addFragment(new Tab01_CountFragment(), "카운트");
-        adapter.addFragment(new Tab02_EmptyFragment(), "빈탭02");
+        adapter.addFragment(new Tab02_StatFragment(), "통계");
         adapter.addFragment(new Tab03_EmptyFragment(), "빈탭03");
         adapter.addFragment(new Tab04_EmptyFragment(), "빈탭04");
         viewPager.setAdapter(adapter);

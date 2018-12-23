@@ -13,6 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -26,6 +29,14 @@ public class Tab01_CountFragment extends android.support.v4.app.Fragment {
     TextView mCountText;
     TextView mDateText;
     Handler mHanlder;
+    int mCount;
+
+    // 현재시각 받아오기용 멤버변수들
+    long mNow;
+    Date mDate;
+    SimpleDateFormat mSdf;
+    String mGetDate;
+
 
     @Nullable
     @Override
@@ -48,7 +59,8 @@ public class Tab01_CountFragment extends android.support.v4.app.Fragment {
                     public void run() {
                         if(((MainActivity)getActivity()) != null) { // 메인액티비티와 순간 떨어졌을 때 getActivity 쓰면 가끔 에러남
                             if (((MainActivity) getActivity()).isBinding != null && ((MainActivity) getActivity()).isBinding) { // 서비스바인딩상태라면
-                                mCountText.setText("" + ((MainActivity) getActivity()).countService.getScreenOnCount());
+                                mCount = ((MainActivity) getActivity()).countService.getScreenOnCount();
+                                mCountText.setText("" + mCount);
                             }
                         }
                     }
@@ -60,5 +72,21 @@ public class Tab01_CountFragment extends android.support.v4.app.Fragment {
         mTimer.schedule(mTimerTask, 0, 1000);
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // 현재시각 표시용 현재시각 받아오기 작업
+        mNow = System.currentTimeMillis(); // 현재시각을 구한다.
+        mDate = new Date(mNow); // Date를 하나 생성하고 거기에 현재시각을 넣는다.
+        mSdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()); // 표기방식을 설정한다.
+        mGetDate = mSdf.format(mDate); // 날짜를 String 형태로 받아와서 저장한다.
+
+        Log.d(TAG, "mNow is # " + mNow);
+        Log.d(TAG, "mDate is # " + mDate);
+        Log.d(TAG, "mSdf is # " + mSdf);
+        Log.d(TAG, "mGetDate is # " + mGetDate);
     }
 }

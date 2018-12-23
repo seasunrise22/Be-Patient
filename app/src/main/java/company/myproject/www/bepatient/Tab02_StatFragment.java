@@ -8,9 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
- *
+ * 통계 데이터 보여줄 프래그먼트. 원래 statistics 인데 stat 으로 줄임.
  */
-public class Tab02_EmptyFragment extends android.support.v4.app.Fragment {
+public class Tab02_StatFragment extends android.support.v4.app.Fragment {
 
     @Nullable
     @Override
