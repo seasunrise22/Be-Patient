@@ -128,9 +128,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+        /**
+         * 지나간 날짜를 저장해서 통계자료로 활용하기 위한 작업들
+         */
         // 현재시각 표시용 현재시각 받아오기 작업
         mNow = System.currentTimeMillis(); // 현재시각을 구한다.
-        mDate = new Date(mNow); // Date를 하나 생성하고 거기에 현재시각을 넣는다.
+        mDate = new Date(mNow); // Date를 하나 생성하고 거기에 현재시각을 넣어 날짜를 생성.
         mSdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()); // 표기방식을 설정한다.
         mGetDate = mSdf.format(mDate); // 날짜를 String 형태로 받아와서 저장한다.
 
@@ -148,18 +151,21 @@ public class MainActivity extends AppCompatActivity {
         try {
             currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(mGetDate);
             beforeDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(statsPref.getString("currentDate", "null")); // 저장된 오늘
+            // 즉, currentDate는 실시간으로 변하는 실제 오늘 날짜이고 beforeDate는 비교를 위해 불러오는 기록된 오늘이다.
         } catch(java.text.ParseException e) {
             e.printStackTrace();
         }
 
-//        // 테스트용 하루이전 날짜 구하기
+        // 테스트용 다른 날짜 구하기
 //        Calendar cal = Calendar.getInstance();
 //        cal.setTime(new Date());
-//        cal.add(Calendar.DATE, -1);
-////        cal.getTime(); <-- 하루 이전 날짜 Date
+//        cal.add(Calendar.DATE, +1); // +는 이후날짜 -는 이전날짜
+//        cal.getTime(); // <-- Date 타입
+//        mGetDate = mSdf.format(cal.getTime());
 
         // 날짜가 지났을때에만 반응하는 조건문
         if(currentDate.after(beforeDate)) { // 새로 갱신된 현재날짜(mDate)가 저장된 현재날짜 이후의 날짜라면. 즉, 날짜가 변했다면.
+//        if(cal.getTime().after(beforeDate)) { <- 테스트용
             // 날짜가 지났나 체크해보고 지났으면 쌓여있는 screenCount를 currentDate 날짜(지난날짜)로 저장하고 0으로 초기화시킨다.
             SharedPreferences servicePref = getSharedPreferences("pref_saveData", Activity.MODE_PRIVATE); // ScreenCountService에서 관리하는 pref 파일
             statsPrefEditor.putInt(statsPref.getString("currentDate", "null"), servicePref.getInt("dailyCount", 0)); // 이전날짜에 저장된 카운트 저장

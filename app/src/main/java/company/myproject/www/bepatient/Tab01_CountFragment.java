@@ -47,6 +47,25 @@ public class Tab01_CountFragment extends android.support.v4.app.Fragment {
         mCountText = view.findViewById(R.id.screenOnCount); // 카운트 보여줄 텍스트뷰 접근
         mDateText = view.findViewById(R.id.dateView); // 오늘 날짜 보여줄 텍스트뷰 접근
 
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // 현재시각 표시용 현재시각 받아오기 작업
+        mNow = System.currentTimeMillis(); // 현재시각을 구한다.
+        mDate = new Date(mNow); // Date를 하나 생성하고 거기에 현재시각을 넣는다.
+        mSdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()); // 표기방식을 설정한다.
+        mGetDate = mSdf.format(mDate); // 날짜를 String 형태로 받아와서 저장한다.
+
+        Log.d(TAG, "mNow is # " + mNow);
+        Log.d(TAG, "mDate is # " + mDate);
+        Log.d(TAG, "mSdf is # " + mSdf);
+        Log.d(TAG, "mGetDate is # " + mGetDate);
+
+        // 실시간으로 텍스트가 변화하는 것처럼 보이기 위한 TimerTask와 Handler 사용부분
         mDateText.setText(((MainActivity) getActivity()).mGetDate);
 
         // 그냥 TimerTask로 기능을 돌리면 스레드관련 에러떠서 Handler 이용해서 구현
@@ -70,23 +89,5 @@ public class Tab01_CountFragment extends android.support.v4.app.Fragment {
 
         Timer mTimer = new Timer();
         mTimer.schedule(mTimerTask, 0, 1000);
-
-        return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        // 현재시각 표시용 현재시각 받아오기 작업
-        mNow = System.currentTimeMillis(); // 현재시각을 구한다.
-        mDate = new Date(mNow); // Date를 하나 생성하고 거기에 현재시각을 넣는다.
-        mSdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()); // 표기방식을 설정한다.
-        mGetDate = mSdf.format(mDate); // 날짜를 String 형태로 받아와서 저장한다.
-
-        Log.d(TAG, "mNow is # " + mNow);
-        Log.d(TAG, "mDate is # " + mDate);
-        Log.d(TAG, "mSdf is # " + mSdf);
-        Log.d(TAG, "mGetDate is # " + mGetDate);
     }
 }

@@ -23,6 +23,35 @@
         android:textSize="128dp"
         android:layout_centerInParent="true"/>
 
+    <TextView
+        android:id="@+id/explainText01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/screenOnCount"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:text="당신은 오늘 하루"
+        android:textSize="26dp" />
+
+    <TextView
+        android:id="@+id/countDanWe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="번"
+        android:textSize="48dp"
+        android:layout_toRightOf="@id/screenOnCount"
+        android:layout_centerInParent="true"/>
+
+    <TextView
+        android:id="@+id/explainText02"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="화면을 켰습니다."
+        android:textSize="26dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/screenOnCount"
+        android:layout_marginTop="30dp"/>
+
     <!--<RelativeLayout-->
     <!--android:layout_width="wrap_content"-->
     <!--android:layout_height="wrap_content"-->
