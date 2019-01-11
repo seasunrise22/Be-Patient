@@ -1,8 +1,6 @@
 package company.myproject.www.bepatient;
 
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -22,7 +20,6 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -290,9 +287,8 @@ public class MainActivity extends AppCompatActivity {
     // 탭 뷰페이저 : 받은 뷰페이저 객체에 프레그먼트와 타이틀 정보가 담긴 어댑터 객체를 세트
     private void setupViewPager(ViewPager viewPager) {
         adapter.addFragment(new Tab01_CountFragment(), "카운트");
-        adapter.addFragment(new Tab02_StatFragment(), "통계");
-        adapter.addFragment(new Tab03_EmptyFragment(), "빈탭03");
-        adapter.addFragment(new Tab04_EmptyFragment(), "빈탭04");
+        adapter.addFragment(new Tab02_StatFragment(), "기록");
+        adapter.addFragment(new Tab03_InfoFragment(), "기타");
         viewPager.setAdapter(adapter);
     }
 
