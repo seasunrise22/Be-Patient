@@ -92,28 +92,6 @@ public class MainActivity extends AppCompatActivity {
 
         // 서비스 시작용 인텐트
         serviceIntent = new Intent(getApplicationContext(), ScreenCountService.class);
-
-//        /**
-//         * set 된 시간(자정)에 그 날 하루동안의 화면켜짐횟수(dailyData)를 통계저장용 파일로 넘겨서 저장시킴
-//         * 이거 안 쓰게 될수도 있음.
-//         */
-//        // Calendar 객체를 생성해 시간을 set
-//        Calendar mCalendar = Calendar.getInstance();
-//        mCalendar.set(Calendar.HOUR_OF_DAY, 24); // 자정
-//        mCalendar.set(Calendar.MINUTE, 0);
-//        mCalendar.set(Calendar.SECOND, 0);
-//
-//        // AlarmManager에게 실행을 부탁할 PendingIntent 구현
-//        Intent mAlarmIntent = new Intent("company.myproject.www.bepatient.ALARM_START"); // manifest.xml에 지정해 둔 intent-filter 활용
-//        PendingIntent mPendingIntent = PendingIntent.getBroadcast(this, 0, mAlarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-//
-//        // AlarmManager를 얻어와서 세팅
-//        AlarmManager mAlarmManager = (AlarmManager)getSystemService(ALARM_SERVICE); // 알람매니저 하나 가져옴
-//        mAlarmManager.set(
-//                AlarmManager.RTC_WAKEUP,
-//                mCalendar.getTimeInMillis(),
-//                mPendingIntent
-//        );
     }
 
     @Override
@@ -173,42 +151,6 @@ public class MainActivity extends AppCompatActivity {
             servicePrefEditor.putInt("dailyCount", 0);
             servicePrefEditor.apply();
         }
-
-
-//        String testDate = statsPref.getString("beforeDate", "null");
-//        if(!testDate.equals("null")) {
-//            beforeDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(testDate);
-//        }
-
-
-
-//        statsPref.getString(mGetDate, "no date"); // 받아온 현재날짜의 이름으로 변수의 값을 불러온다. 변수가 없다면 초기값은 no date.
-//        if(beforeDate == null) { // 최초실행일시(아, 이것도 sharedPref 로 해야겠구나... 껐다 키면 계속 null 되네)
-//            beforeDate = mDate;
-//            currentDate = mDate;
-//        } else { // 최초실행이 아닐시
-//            currentDate = mDate;
-//            if(currentDate.after(beforeDate)) { // 현재날짜가 저장되어있는 이전날짜보다 이후라면(날짜가 바뀜)
-//                String searchDate = mSdf.format(beforeDate);
-//                statPrefEditor.putString(searchDate, adapter.getItem(0).mCount)
-        // 요런식으로 비교해서 데이터 집어넣으면 될 듯.
-        // 근데 Main에 말고 걍 Tab01 프래그먼트 Resume 안에다가 구현하자.(아니다 그냥 main에다가 구현하자. 프래그먼트에 하면 넘길때마다 체크해)
-        // 서비스로부터 받아 온 count 변수를 0으로 초기화...
-        // 아, 액티비티에서 서비스 함수로 어떻게 접근하지? 서비스 함수에 있는 count 변수를 0으로 초기화 해야 하는데.
-        // 카운트 변수를 지금처럼 서비스에 둬서 서비스에 접근한 후 데이터를 조작하거나.
-        // 아니면... 그냥 Main에 count 변수를 static으로 둬서 전역으로 접근해버릴까?
-        // 아 카운트 그냥 sharedPref로 관리하네
-//            }
-//        }
-
-        // 앱화면 활성화 될 때 마다 통계자료 데이터 확인하고 넘기기
-        // 서비스에 구현하려니 스위치안끄면 어떻게 새 날짜를 받아서 데이터를 넘겨야할지 애매함. 서비스에 타이머 걸어두는것도 좀 그렇고.
-//        statsPref = getSharedPreferences("pref_statsData", Activity.MODE_PRIVATE); // 통계자료 저장을 위한 pref 파일 받아옴.
-//        if(statsPref.getString(mGetDate, "no data").equals("no data")) { // 오늘 날짜로 된 데이터(변수)가 생성되어 있지 않다면
-//            statsPrefEditor = statsPref.edit(); // 데이터 수정을 위한 에디터 연결.
-//            statsPrefEditor.putString(mGetDate, "checking now..."); // 오늘 날짜로 변수 생성하고 변수값으로 checking now... 입력.
-//            statsPrefEditor.apply();
-//        }
 
 //        Log.d(TAG, "mNow is # " + mNow);
 //        Log.d(TAG, "mDate is # " + mDate);
@@ -288,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager) {
         adapter.addFragment(new Tab01_CountFragment(), "카운트");
         adapter.addFragment(new Tab02_StatFragment(), "기록");
-        adapter.addFragment(new Tab03_InfoFragment(), "기타");
+        adapter.addFragment(new Tab03_InfoFragment(), "정보");
         viewPager.setAdapter(adapter);
     }
 

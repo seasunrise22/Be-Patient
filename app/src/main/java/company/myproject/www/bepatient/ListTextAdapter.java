@@ -46,6 +46,7 @@ public class ListTextAdapter extends BaseAdapter {
     // 아이템에 표시할 뷰를 리턴하는 메소드
     public View getView(int position, View convertView, ViewGroup parent) {
         ListTextView itemView;
+        // convertView는 각 아이템을 매번 새로 생성하지 않고 재활용 하기 위함
         if(convertView == null) {
             itemView = new ListTextView(mContext, mItems.get(position));
         } else {

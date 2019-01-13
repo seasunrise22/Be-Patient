@@ -23,7 +23,7 @@ public class ListTextItem {
         return mData;
     }
 
-    // 받은 인덱스에 해당하는 텍스트 데이터를 반환시키는 메소드
+//    // 받은 인덱스에 해당하는 텍스트 데이터를 반환시키는 메소드
     public String getData(int index) {
         if(mData == null || index >= mData.length) {
             return null;

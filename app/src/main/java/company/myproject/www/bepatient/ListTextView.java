@@ -24,9 +24,9 @@ public class ListTextView extends LinearLayout {
 
         // 뷰 객체 참조
         mTextDate = (TextView) findViewById(R.id.list_date);
-        mTextDate.setText(mItem.getData(0));
+//        mTextDate.setText(mItem.getData(0));
         mTextCount = (TextView) findViewById(R.id.list_count);
-        mTextCount.setText(mItem.getData(1));
+//        mTextCount.setText(mItem.getData(1));
     }
 
     public void setText(int index, String data) {
