@@ -37,16 +37,24 @@ public class Tab02_StatFragment extends android.support.v4.app.Fragment {
 
         // pref_statsData 에서 데이터 뽑아서 리스트뷰로 보여줄 아이템에 집어넣기
         SharedPreferences myPrefs = getActivity().getSharedPreferences("pref_statsData", Activity.MODE_PRIVATE);
+//        // 테스트용 데이터 넣기 시작
+//        SharedPreferences.Editor prefEdit = myPrefs.edit();
+//        prefEdit.putInt("2019-01-01", 1);
+//        prefEdit.putInt("2019-01-02", 2);
+//        prefEdit.putInt("2019-01-03", 3);
+//        prefEdit.putInt("2019-01-04", 4);
+//        prefEdit.apply();
+//        // 테스트용 끝
+
         TreeMap<String, ?> keys = new TreeMap<String, Object>(myPrefs.getAll()); // TreeMap 이란게 값이 생성된 순서대로 쫘라락 정렬되는 느낌 같은거 같은데 ㅎ
         // for( A : B )
         // B에서 차례대로 객체를 꺼내서 A에다가 넣겠다 는 의미
         for (Map.Entry<String, ?> entry : keys.entrySet()) {
 //            Log.i(TAG, "map keys " + entry.getKey());
 //            Log.i(TAG, "map values " + entry.getValue());
-            if(entry.getKey().equals("beforeDate")) {
-                break;
+            if(!entry.getKey().equals("beforeDate") && !entry.getKey().equals("currentDate")) {
+                adapter.addItem(new ListTextItem(entry.getKey(), ""+entry.getValue()));
             }
-            adapter.addItem(new ListTextItem(entry.getKey(), ""+entry.getValue()));
         } // TreeMap으로 pref_statsData에서 데이터를 뽑아내고
         // 뽑아낸 데이터를 다시 Map.Entry로 넣고,
         // Map.Entry에서 getKey로 Key만 뽑아내는 구존가보네
