@@ -39,10 +39,17 @@ public class Tab02_StatFragment extends android.support.v4.app.Fragment {
         SharedPreferences myPrefs = getActivity().getSharedPreferences("pref_statsData", Activity.MODE_PRIVATE);
 //        // 테스트용 데이터 넣기 시작
 //        SharedPreferences.Editor prefEdit = myPrefs.edit();
-//        prefEdit.putInt("2019-01-01", 1);
-//        prefEdit.putInt("2019-01-02", 2);
-//        prefEdit.putInt("2019-01-03", 3);
-//        prefEdit.putInt("2019-01-04", 4);
+//        prefEdit.putInt("2018-12-12", 24);
+//        prefEdit.putInt("2018-12-24", 30);
+//        prefEdit.putInt("2018-12-25", 10);
+//        prefEdit.putInt("2018-12-27", 17);
+//        prefEdit.putInt("2018-12-30", 55);
+//        prefEdit.putInt("2019-01-01", 14);
+//        prefEdit.putInt("2019-01-07", 18);
+//        prefEdit.putInt("2019-01-08", 33);
+//        prefEdit.putInt("2019-01-10", 47);
+//        prefEdit.putInt("2019-01-12", 11);
+//        prefEdit.putInt("2019-01-14", 20);
 //        prefEdit.apply();
 //        // 테스트용 끝
 
