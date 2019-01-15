@@ -20,6 +20,7 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -40,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
     // 통계자료 저장용 SharedPreferences
     SharedPreferences statsPref;
     SharedPreferences.Editor statsPrefEditor;
+
+    SharedPreferences servicePref;
+    SharedPreferences.Editor servicePrefEditor;
 
     // 날짜 비교를 위한 그릇
     Date currentDate;
@@ -112,8 +116,19 @@ public class MainActivity extends AppCompatActivity {
         mSdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()); // 표기방식을 설정한다.
         mGetDate = mSdf.format(mDate); // 날짜를 String 형태로 받아와서 저장한다.
 
+        // 테스트용 다른 날짜 구하기
+//        Calendar cal = Calendar.getInstance();
+//        cal.setTime(new Date());
+//        cal.add(Calendar.DATE, +1); // +는 이후날짜 -는 이전날짜
+//        cal.getTime(); // <-- Date 타입
+//        mSdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()); // 표기방식을 설정한다.
+//        mGetDate = mSdf.format(cal.getTime());
+
         statsPref = getSharedPreferences("pref_statsData", Activity.MODE_PRIVATE); // 통계자료 저장을 위한 pref 파일 받아옴.
         statsPrefEditor = statsPref.edit(); // 통계자료 수정을 위한 edit 설정
+
+        servicePref = getSharedPreferences("pref_saveData", Activity.MODE_PRIVATE); // ScreenCountService에서 관리하는 pref 파일
+        servicePrefEditor = servicePref.edit();
 
         if (statsPref.getString("currentDate", "null").equals("null")) { // 최초실행일시
             // currentDate 값을 현재날짜로 설정해둔다.
@@ -131,23 +146,18 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        // 테스트용 다른 날짜 구하기
-//        Calendar cal = Calendar.getInstance();
-//        cal.setTime(new Date());
-//        cal.add(Calendar.DATE, +1); // +는 이후날짜 -는 이전날짜
-//        cal.getTime(); // <-- Date 타입
-//        mGetDate = mSdf.format(cal.getTime());
+        // 테스트용
+//        servicePrefEditor.putInt("dailyCount", 24);
+//        servicePrefEditor.apply();
 
         // 날짜가 지났을때에만 반응하는 조건문
         if(currentDate.after(beforeDate)) { // 새로 갱신된 현재날짜(mDate)가 저장된 현재날짜 이후의 날짜라면. 즉, 날짜가 변했다면.
-//        if(cal.getTime().after(beforeDate)) { <- 테스트용
+//        if(cal.getTime().after(beforeDate)) { //<- 테스트용
             // 날짜가 지났나 체크해보고 지났으면 쌓여있는 screenCount를 currentDate 날짜(지난날짜)로 저장하고 0으로 초기화시킨다.
-            SharedPreferences servicePref = getSharedPreferences("pref_saveData", Activity.MODE_PRIVATE); // ScreenCountService에서 관리하는 pref 파일
             statsPrefEditor.putInt(statsPref.getString("currentDate", "null"), servicePref.getInt("dailyCount", 0)); // 이전날짜에 저장된 카운트 저장
             statsPrefEditor.putString("currentDate", mGetDate); // currentDate 값은 새로이 갱신된 현재날짜로 치환.
             statsPrefEditor.apply();
             // 이전날짜에 카운트를 집어넣었으니 새로이 카운트 하기 위해 dailyCount 변수는 0으로 초기화
-            SharedPreferences.Editor servicePrefEditor = servicePref.edit();
             servicePrefEditor.putInt("dailyCount", 0);
             servicePrefEditor.apply();
         }
