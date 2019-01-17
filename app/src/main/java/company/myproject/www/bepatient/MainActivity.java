@@ -157,8 +157,8 @@ public class MainActivity extends AppCompatActivity {
             statsPrefEditor.putInt(statsPref.getString("currentDate", "null"), servicePref.getInt("dailyCount", 0)); // 이전날짜에 저장된 카운트 저장
             statsPrefEditor.putString("currentDate", mGetDate); // currentDate 값은 새로이 갱신된 현재날짜로 치환.
             statsPrefEditor.apply();
-            // 이전날짜에 카운트를 집어넣었으니 새로이 카운트 하기 위해 dailyCount 변수는 1로 초기화.(화면을 1회 켜서 Resume으로 들어와야 데이터가 넘어가짐으로 1로 초기화)
-            servicePrefEditor.putInt("dailyCount", 1);
+            // 이전날짜에 카운트를 집어넣었으니 새로이 카운트 하기 위해 dailyCount 변수는 0으로 초기화
+            servicePrefEditor.putInt("dailyCount", 0);
             servicePrefEditor.apply();
         }
 

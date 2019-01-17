@@ -6,8 +6,8 @@ android {
         applicationId "company.myproject.www.bepatient"
         minSdkVersion 15
         targetSdkVersion 27
-        versionCode 5
-        versionName "1.5"
+        versionCode 6
+        versionName "1.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
