@@ -14,4 +14,7 @@
 - Language : Java
 
 ## Screenshots
-
+![resize_bepatient_01](https://user-images.githubusercontent.com/45503931/56092669-d41c4180-5ef9-11e9-9f09-0f665f7016aa.png)
+![resize_bepatient_02](https://user-images.githubusercontent.com/45503931/56092670-d41c4180-5ef9-11e9-8143-832c3f9196da.png)
+![resize_bepatient_03](https://user-images.githubusercontent.com/45503931/56092671-d4b4d800-5ef9-11e9-8023-472453741d6b.png)
+![resize_bepatient_04](https://user-images.githubusercontent.com/45503931/56092672-d4b4d800-5ef9-11e9-80c7-3f6d1562726e.png)
