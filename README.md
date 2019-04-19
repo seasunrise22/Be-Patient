@@ -14,7 +14,7 @@
 - Language : Java
 
 ## Code Preview
-***화면 켜짐 Filter에 반응할 Receiver***
+***서비스 동작 중 화면이 켜지면 반응할 Receiver 구현***
 ```java
 public int onStartCommand(Intent intent, int flags, int startId) {
 
