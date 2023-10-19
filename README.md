@@ -13,6 +13,13 @@
 - IDE : Android Studio
 - Language : Java
 
+## Screenshots
+![resize_bepatient_01](https://user-images.githubusercontent.com/45503931/56092683-ef874c80-5ef9-11e9-910c-a7aeb36c0141.png)
+![resize_bepatient_02](https://user-images.githubusercontent.com/45503931/56092684-ef874c80-5ef9-11e9-96f8-cd37bacd5b47.png)
+
+![resize_bepatient_03](https://user-images.githubusercontent.com/45503931/56092685-ef874c80-5ef9-11e9-8d25-cccf879cb570.png)
+![resize_bepatient_04](https://user-images.githubusercontent.com/45503931/56092682-eeeeb600-5ef9-11e9-916a-2a2f7f1a89eb.png)
+
 ## Code Preview
 ***서비스 동작 중 화면이 켜지면 반응할 Receiver 구현***
 ```java
@@ -46,10 +53,3 @@ public int onStartCommand(Intent intent, int flags, int startId) {
     mIntentFilter = new IntentFilter(Intent.ACTION_USER_PRESENT); // 화면 켜짐(잠금화면 풀린 상태) 액션 필터 등록
     registerReceiver(mReceiver, mIntentFilter); // 브로드캐스트 리시버 등록
 ```
-
-## Screenshots
-![resize_bepatient_01](https://user-images.githubusercontent.com/45503931/56092683-ef874c80-5ef9-11e9-910c-a7aeb36c0141.png)
-![resize_bepatient_02](https://user-images.githubusercontent.com/45503931/56092684-ef874c80-5ef9-11e9-96f8-cd37bacd5b47.png)
-
-![resize_bepatient_03](https://user-images.githubusercontent.com/45503931/56092685-ef874c80-5ef9-11e9-8d25-cccf879cb570.png)
-![resize_bepatient_04](https://user-images.githubusercontent.com/45503931/56092682-eeeeb600-5ef9-11e9-916a-2a2f7f1a89eb.png)
